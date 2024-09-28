@@ -45,7 +45,7 @@ public class FilmController {
             LOG.warn("Film release date is before minimum");
             throw new ValidationException("Дата релиза фильма не может быть раньше " + MIN_RELEASE_DATE);
         }
-        if (film.getDuration().isNegative()) {
+        if (film.getDuration() < 0) {
             LOG.warn("Film duration is negative");
             throw new ValidationException("Длительность фильма не может быть отрицательной");
         }

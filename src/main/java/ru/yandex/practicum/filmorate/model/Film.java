@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Duration;
 import java.time.LocalDate;
 
 /**
@@ -20,5 +19,5 @@ public class Film {
     private String name;
     private String description;
     private LocalDate releaseDate;
-    private Duration duration;
+    private Integer duration;
 }
