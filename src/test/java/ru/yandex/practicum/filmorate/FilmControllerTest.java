@@ -33,7 +33,7 @@ public class FilmControllerTest {
         film.setReleaseDate(Instant.parse("1994-12-03T00:00:00.00Z"));
         film.setDescription("Фильм «Побег из Шоушенка» (1994) — это культовая драма, снятая по мотивам повести Стивена Кинга. В центре сюжета — история Энди Дюфрейна, банкира, несправедливо обвинённого в убийстве жены и приговорённого к пожизненному заключению в тюрьме Шоушенк. Несмотря на жестокость и безнадёжность тюремной жизни, Энди не теряет надежды и находит способы выжить и даже обрести свободу. Фильм получил множество наград и считается одним из лучших в истории кинематографа.");
         Exception exception = Assertions.assertThrows(ValidationException.class, () -> filmController.addFilm(film));
-        Assertions.assertEquals("Описание фильма не может быть больше 200", exception.getMessage());
+        Assertions.assertEquals("Описание фильма не может быть больше 200 символов", exception.getMessage());
     }
 
     @Test
