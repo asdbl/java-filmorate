@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     private final HashMap<Long, User> users = new HashMap<>();
-    private final static Logger log = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
     private static Long id = 0L;
 
     @PostMapping
@@ -25,25 +25,25 @@ public class UserController {
         userValidation(user);
         user.setId(++id);
         users.put(user.getId(), user);
-        log.info("User created: {}", user);
+        LOG.info("User created: {}", user);
         return user;
     }
 
     private static void userValidation(User user) {
         if (user.getEmail() == null || !user.getEmail().contains("@")) {
-            log.warn("User email address is invalid");
+            LOG.warn("User email address is invalid");
             throw new ValidationException("Электронная почта не может быть пустой");
         }
         if (user.getLogin() == null || user.getLogin().isBlank()) {
-            log.warn("User login is invalid");
+            LOG.warn("User login is invalid");
             throw new ValidationException("Логин не может быть пустым");
         }
         if (user.getName() == null || user.getName().isBlank()) {
-            log.warn("User name is blank, use email instead");
+            LOG.warn("User name is blank, use email instead");
             user.setName(user.getEmail());
         }
         if (user.getBirthday().isAfter(Instant.now())) {
-            log.warn("User birthday is invalid");
+            LOG.warn("User birthday is invalid");
             throw new ValidationException("Дата рождения не может быть в будущем");
         }
     }
@@ -54,17 +54,17 @@ public class UserController {
             if (users.containsKey(user.getId())) {
                 userValidation(user);
                 users.put(user.getId(), user);
-                log.info("User updated: {}", user);
+                LOG.info("User updated: {}", user);
                 return user;
             }
         }
-        log.warn("User id is invalid");
+        LOG.warn("User id is invalid");
         throw new NotFoundException("Пользователь с id " + user.getId() + " не найден");
     }
 
     @GetMapping
     public List<User> getUsers() {
-        log.info("Get all users");
+        LOG.info("Get all users");
         return new ArrayList<>(users.values());
     }
 
