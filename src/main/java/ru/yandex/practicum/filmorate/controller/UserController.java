@@ -40,7 +40,7 @@ public class UserController {
         }
         if (user.getName() == null || user.getName().isBlank()) {
             LOG.warn("User name is blank, use email instead");
-            user.setName(user.getEmail());
+            user.setName(user.getLogin());
         }
         if (user.getBirthday().isAfter(LocalDate.now())) {
             LOG.warn("User birthday is invalid");
