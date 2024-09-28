@@ -38,7 +38,7 @@ public class UserControllerTest {
         user.setLogin("abcd");
         user.setBirthday(LocalDate.of(2000, 10, 10));
         userController.createUser(user);
-        Assertions.assertEquals(user.getName(), user.getEmail());
+        Assertions.assertEquals(user.getName(), user.getLogin());
     }
 
     @Test
