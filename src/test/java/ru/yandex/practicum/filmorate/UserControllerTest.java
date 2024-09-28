@@ -7,7 +7,7 @@ import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.Instant;
+import java.time.LocalDate;
 
 @SpringBootTest
 public class UserControllerTest {
@@ -36,7 +36,7 @@ public class UserControllerTest {
         user.setName("");
         user.setEmail("abcd@gmail.com");
         user.setLogin("abcd");
-        user.setBirthday(Instant.MIN);
+        user.setBirthday(LocalDate.of(2000, 10, 10));
         userController.createUser(user);
         Assertions.assertEquals(user.getName(), user.getEmail());
     }
@@ -46,7 +46,7 @@ public class UserControllerTest {
         User user = new User();
         user.setEmail("abcd@gmail.com");
         user.setLogin("abcd");
-        user.setBirthday(Instant.now().plusSeconds(1));
+        user.setBirthday(LocalDate.of(20000, 10, 10));
         Exception exception = Assertions.assertThrows(ValidationException.class, () -> userController.createUser(user));
         Assertions.assertEquals("Дата рождения не может быть в будущем", exception.getMessage());
     }

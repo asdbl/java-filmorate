@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Data
 public class User {
@@ -16,5 +17,5 @@ public class User {
     @NotBlank
     private String login;
     private String name;
-    private Instant birthday;
+    private LocalDate birthday;
 }

@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +43,7 @@ public class UserController {
             LOG.warn("User name is blank, use email instead");
             user.setName(user.getEmail());
         }
-        if (user.getBirthday().isAfter(Instant.now())) {
+        if (user.getBirthday().isAfter(LocalDate.now())) {
             LOG.warn("User birthday is invalid");
             throw new ValidationException("Дата рождения не может быть в будущем");
         }

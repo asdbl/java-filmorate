@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 @RequestMapping("/films")
 public class FilmController {
     public static final Integer MAX_DESCRIPTION_LENGTH = 200;
-    public static final Instant MIN_RELEASE_DATE = Instant.parse("1895-12-28T00:00:00Z");
+    public static final LocalDate MIN_RELEASE_DATE = LocalDate.of(1895, 12, 28);
     private final HashMap<Long, Film> films = new HashMap<>();
     private static final Logger LOG = LoggerFactory.getLogger(FilmController.class);
     private static Long id = 0L;
