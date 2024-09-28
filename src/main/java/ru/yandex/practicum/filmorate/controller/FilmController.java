@@ -16,9 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    private static final int MAX_DESCRIPTION_LENGTH = 200;
-    private static final Instant MIN_RELEASE_DATE = Instant.parse("1895-12-28T00:00:00Z");
-    private static final HashMap<Long, Film> films = new HashMap<>();
+    public static final int MAX_DESCRIPTION_LENGTH = 200;
+    public static final Instant MIN_RELEASE_DATE = Instant.parse("1895-12-28T00:00:00Z");
+    private final HashMap<Long, Film> films = new HashMap<>();
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
     private static Long id = 0L;
 
