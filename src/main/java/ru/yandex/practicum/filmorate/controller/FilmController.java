@@ -16,8 +16,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    public static final int maxDescriptionLength = 200;
-    public static final Instant minReleaseDate = Instant.parse("1895-12-28T00:00:00Z");
+    public static final Integer MAX_DESCRIPTION_LENGTH = 200;
+    public static final Instant MIN_RELEASE_DATE = Instant.parse("1895-12-28T00:00:00Z");
     private final HashMap<Long, Film> films = new HashMap<>();
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
     private static Long id = 0L;
@@ -36,14 +36,14 @@ public class FilmController {
             throw new ValidationException("Название фильма не может быть пустым");
         }
         if (film.getDescription() != null) {
-            if (film.getDescription().length() > maxDescriptionLength) {
+            if (film.getDescription().length() > MAX_DESCRIPTION_LENGTH) {
                 log.warn("Film description is too long");
-                throw new ValidationException("Описание фильма не может быть больше " + maxDescriptionLength + " символов");
+                throw new ValidationException("Описание фильма не может быть больше " + MAX_DESCRIPTION_LENGTH + " символов");
             }
         }
-        if (film.getReleaseDate().isBefore(minReleaseDate)) {
+        if (film.getReleaseDate().isBefore(MIN_RELEASE_DATE)) {
             log.warn("Film release date is before minimum");
-            throw new ValidationException("Дата релиза фильма не может быть раньше " + minReleaseDate);
+            throw new ValidationException("Дата релиза фильма не может быть раньше " + MIN_RELEASE_DATE);
         }
         if (film.getDuration().isNegative()) {
             log.warn("Film duration is negative");
