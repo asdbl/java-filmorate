@@ -91,7 +91,7 @@
 			<property name="tokens" value="METHOD_REF"/>
 		</module>
 		<module name="PackageName">
-			<!--<property name="format" year="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>-->
+			<!--<property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>-->
 			<message key="name.invalidPattern" value="Package name ''{0}'' must match pattern ''{1}''."/>
 		</module>
 		<module name="TypeName">
@@ -158,14 +158,14 @@
 			<property name="severity" value="ignore"/>
 			<metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
 		</module>
-<!--		<module name="CustomImportOrder">-->
-<!--			<property name="customImportOrderRules" year="STATIC###STANDARD_JAVA_PACKAGE###SPECIAL_IMPORTS###THIRD_PARTY_PACKAGE"/>-->
-<!--			<property name="standardPackageRegExp" year="^java\."/>-->
-<!--			<property name="specialImportsRegExp" year="^javax\."/>-->
-<!--			<property name="thirdPartyPackageRegExp" year="^org\."/>-->
-<!--			<property name="sortImportsInGroupAlphabetically" year="true"/>-->
-<!--			<property name="separateLineBetweenGroups" year="true"/>-->
-<!--		</module>-->
+		<!--		<module name="CustomImportOrder">-->
+		<!--			<property name="customImportOrderRules" value="STATIC###STANDARD_JAVA_PACKAGE###SPECIAL_IMPORTS###THIRD_PARTY_PACKAGE"/>-->
+		<!--			<property name="standardPackageRegExp" value="^java\."/>-->
+		<!--			<property name="specialImportsRegExp" value="^javax\."/>-->
+		<!--			<property name="thirdPartyPackageRegExp" value="^org\."/>-->
+		<!--			<property name="sortImportsInGroupAlphabetically" value="true"/>-->
+		<!--			<property name="separateLineBetweenGroups" value="true"/>-->
+		<!--		</module>-->
 		<module name="UnusedImports"/>
 		<module name="MethodParamPad"/>
 		<module name="NoWhitespaceBefore">
