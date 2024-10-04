@@ -1,24 +1,38 @@
 package ru.yandex.practicum.filmorate;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.UserController;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.time.LocalDate;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @SpringBootTest
 public class UserControllerTest {
     static UserController userController = new UserController();
+    private Validator validator;
+
+    @Before
+    public void setUp() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+    }
 
     @Test
     public void ifEmailIsBlankThrowException() {
         User user = new User();
         user.setEmail("");
-        Exception exception = Assertions.assertThrows(ValidationException.class, () -> userController.createUser(user));
-        Assertions.assertEquals("Электронная почта не может быть пустой", exception.getMessage());
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertFalse(violations.isEmpty());
     }
 
     @Test
@@ -26,8 +40,8 @@ public class UserControllerTest {
         User user = new User();
         user.setEmail("abcd@gmail.com");
         user.setLogin("");
-        Exception exception = Assertions.assertThrows(ValidationException.class, () -> userController.createUser(user));
-        Assertions.assertEquals("Логин не может быть пустым", exception.getMessage());
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertFalse(violations.isEmpty());
     }
 
     @Test
@@ -38,7 +52,7 @@ public class UserControllerTest {
         user.setLogin("abcd");
         user.setBirthday(LocalDate.of(2000, 10, 10));
         userController.createUser(user);
-        Assertions.assertEquals(user.getName(), user.getLogin());
+        assertEquals(user.getName(), user.getLogin());
     }
 
     @Test
@@ -47,7 +61,7 @@ public class UserControllerTest {
         user.setEmail("abcd@gmail.com");
         user.setLogin("abcd");
         user.setBirthday(LocalDate.of(20000, 10, 10));
-        Exception exception = Assertions.assertThrows(ValidationException.class, () -> userController.createUser(user));
-        Assertions.assertEquals("Дата рождения не может быть в будущем", exception.getMessage());
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertFalse(violations.isEmpty());
     }
 }

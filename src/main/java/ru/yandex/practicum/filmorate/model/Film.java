@@ -1,10 +1,13 @@
 package ru.yandex.practicum.filmorate.model;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import ru.yandex.practicum.filmorate.validation.ReleaseDate;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 /**
@@ -14,10 +17,13 @@ import java.time.LocalDate;
 @Setter
 public class Film {
     private Long id;
-    @NotNull
     @NotBlank
     private String name;
+    @Size(max = 200)
     private String description;
+    @NotNull
+    @ReleaseDate(year = 1895, month = 12, day = 28, message = "Дата выхода фильма не может быть раньше 1895-12-28")
     private LocalDate releaseDate;
-    private Integer duration;
+    @Positive
+    private int duration;
 }
