@@ -1,56 +1,63 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
 @Slf4j
+@RequiredArgsConstructor
 public class UserController {
-    private final Map<Long, User> users = new HashMap<>();
-    private Long id = 0L;
+    private final InMemoryUserStorage inMemoryUserStorage;
+    private final UserService userService;
 
     @PostMapping
     public User createUser(@Valid @RequestBody User user) {
-        userValidation(user);
-        user.setId(++id);
-        users.put(user.getId(), user);
-        log.info("User created: {}", user);
-        return user;
+        return inMemoryUserStorage.createUser(user);
     }
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
-        if (user.getId() != null) {
-            if (users.containsKey(user.getId())) {
-                userValidation(user);
-                users.put(user.getId(), user);
-                log.info("User updated: {}", user);
-                return user;
-            }
-        }
-        log.warn("User id is invalid");
-        throw new NotFoundException("Пользователь с id " + user.getId() + " не найден");
+        return inMemoryUserStorage.updateUser(user);
     }
 
     @GetMapping
-    public List<User> getUsers() {
-        log.info("Get all users");
-        return new ArrayList<>(users.values());
+    public List<User> getAllUsers() {
+        return inMemoryUserStorage.getAllUsers();
     }
 
-    private static void userValidation(User user) {
-        if (user.getName() == null || user.getName().isBlank()) {
-            log.warn("User name is blank, use email instead");
-            user.setName(user.getLogin());
-        }
+    @GetMapping("/{userId}")
+    public User getUser(@PathVariable(value = "userId") long userId) {
+        return inMemoryUserStorage.getUser(userId);
+    }
+
+    @PutMapping("/{userId}/friends/{friendId}")
+    public User addFriend(@PathVariable(value = "userId") long userId,
+                          @PathVariable(value = "friendId") long friendId) {
+        return userService.addFriend(userId, friendId);
+    }
+
+    @DeleteMapping("/{userId}/friends/{friendId}")
+    public List<User> removeFriend(@PathVariable(value = "userId") long userId,
+                                   @PathVariable(value = "friendId") long friendId) {
+        return userService.removeFriend(userId, friendId);
+    }
+
+    @GetMapping("/{userId}/friends")
+    public List<User> getFriends(@PathVariable(value = "userId") long userId) {
+        return userService.getFriends(userId);
+    }
+
+    @GetMapping("/{userId}/friends/common/{otherId}")
+    public List<User> getCommonFriends(@PathVariable(value = "userId") long userId,
+                                       @PathVariable(value = "otherId") long otherId) {
+        return userService.getCommonFriends(userId, otherId);
     }
 }
