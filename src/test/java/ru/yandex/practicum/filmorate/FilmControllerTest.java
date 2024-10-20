@@ -1,14 +1,16 @@
 package ru.yandex.practicum.filmorate;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.model.Film;
-
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import ru.yandex.practicum.filmorate.controller.FilmController;
+import ru.yandex.practicum.filmorate.model.Film;
+
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -18,11 +20,14 @@ import static org.junit.Assert.assertFalse;
 public class FilmControllerTest {
 
     private Validator validator;
+    @Autowired
+    private FilmController filmController;
 
     @Before
     public void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
+
     }
 
     @Test
@@ -65,4 +70,5 @@ public class FilmControllerTest {
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertFalse(violations.isEmpty());
     }
+
 }
