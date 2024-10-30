@@ -1,13 +1,13 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import java.util.List;
 
@@ -18,27 +18,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FilmController {
 
-    private final InMemoryFilmStorage inMemoryFilmStorage;
     private final FilmService filmService;
 
     @PostMapping
     public Film addFilm(@RequestBody @Valid Film film) {
-        return inMemoryFilmStorage.addFilm(film);
+        return filmService.addFilm(film);
     }
 
     @PutMapping
     public Film updateFilm(@RequestBody @Valid Film film) {
-        return inMemoryFilmStorage.updateFilm(film);
+        return filmService.updateFilm(film);
     }
 
     @GetMapping
     public List<Film> getAllFilms() {
-        return inMemoryFilmStorage.getAllFilms();
+        return filmService.getAllFilms();
     }
 
     @GetMapping("/{filmId}")
     public Film getFilm(@PathVariable(value = "filmId") long filmId) {
-        return inMemoryFilmStorage.getFilm(filmId);
+        return filmService.getFilm(filmId);
     }
 
     @PutMapping("/{filmId}/like/{userId}")
@@ -52,7 +51,7 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") String limit) {
+    public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") @Positive int limit) {
         return filmService.getPopularFilms(limit);
     }
 }

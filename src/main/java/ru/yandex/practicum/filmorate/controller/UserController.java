@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.util.List;
 
@@ -15,32 +14,32 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class UserController {
-    private final InMemoryUserStorage inMemoryUserStorage;
+
     private final UserService userService;
 
     @PostMapping
     public User createUser(@Valid @RequestBody User user) {
-        return inMemoryUserStorage.createUser(user);
+        return userService.createUser(user);
     }
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
-        return inMemoryUserStorage.updateUser(user);
+        return userService.updateUser(user);
     }
 
     @GetMapping
     public List<User> getAllUsers() {
-        return inMemoryUserStorage.getAllUsers();
+        return userService.getAllUsers();
     }
 
     @GetMapping("/{userId}")
     public User getUser(@PathVariable(value = "userId") long userId) {
-        return inMemoryUserStorage.getUser(userId);
+        return userService.getUser(userId);
     }
 
     @PutMapping("/{userId}/friends/{friendId}")
-    public User addFriend(@PathVariable(value = "userId") long userId,
-                          @PathVariable(value = "friendId") long friendId) {
+    public List<User> addFriend(@PathVariable(value = "userId") long userId,
+                                @PathVariable(value = "friendId") long friendId) {
         return userService.addFriend(userId, friendId);
     }
 
