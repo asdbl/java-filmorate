@@ -59,23 +59,28 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film addLike(long userId, long filmId) {
-        User user = userStorage.getUser(userId);
+        userStorage.getUser(userId);
         Film film = films.get(filmId);
-        likesById.get(filmId).add(userId);
-        film.setLike(film.getLike() + 1);
-        log.trace("Like added: {}, to film: {}", userId, filmId);
-        return getFilm(filmId);
+        if (likesById.containsKey(filmId)) {
+            likesById.get(filmId).add(userId);
+            film.setLike(film.getLike() + 1);
+            log.trace("Like added: {}, to film: {}", userId, filmId);
+            return getFilm(filmId);
+        }
+        throw new NotFoundException("Фильм с id " + filmId + " не найден.");
     }
 
     @Override
     public Film removeLike(long userId, long filmId) {
-        User user = userStorage.getUser(userId);
+        userStorage.getUser(userId);
         Film film = films.get(filmId);
-        likesById.get(filmId).remove(userId);
-        film.setLike(film.getLike() - 1);
-        log.trace("Like removed: {}, to film: {}", userId, filmId);
-        return getFilm(filmId);
-
+        if (likesById.containsKey(filmId)) {
+            likesById.get(filmId).remove(userId);
+            film.setLike(film.getLike() - 1);
+            log.trace("Like removed: {}, to film: {}", userId, filmId);
+            return getFilm(filmId);
+        }
+        throw new NotFoundException("Фильм с id " + filmId + " не найден.");
     }
 
     @Override
