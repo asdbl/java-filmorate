@@ -23,5 +23,4 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "Длительность фильм не может быть отрицательной")
     private int duration;
-    private int like;
 }

@@ -51,20 +51,16 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film getFilm(long id) {
-        Optional<Film> optionalFilm = Optional.ofNullable(films.get(id));
-        return optionalFilm.orElseThrow(() -> new NotFoundException("Введен неверный id фильма"));
+    public Optional<Film> getFilm(long id) {
+        return Optional.ofNullable(films.get(id));
     }
 
     @Override
     public Film addLike(long userId, long filmId) {
-        userStorage.getUser(userId);
-        Film film = films.get(filmId);
         if (likesById.containsKey(filmId)) {
             likesById.get(filmId).add(userId);
-            film.setLike(film.getLike() + 1);
-            log.trace("Like added: {}, to film: {}", userId, filmId);
-            return getFilm(filmId);
+            log.info("Like added: {}, to film: {}", userId, filmId);
+            return getFilm(filmId).orElseThrow(() -> new NotFoundException("Фильм с id " + filmId + " не найден."));
         }
         throw new NotFoundException("Фильм с id " + filmId + " не найден.");
     }
@@ -72,12 +68,11 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Film removeLike(long userId, long filmId) {
         userStorage.getUser(userId);
-        Film film = films.get(filmId);
+        films.get(filmId);
         if (likesById.containsKey(filmId)) {
             likesById.get(filmId).remove(userId);
-            film.setLike(film.getLike() - 1);
-            log.trace("Like removed: {}, to film: {}", userId, filmId);
-            return getFilm(filmId);
+            log.info("Like removed: {}, to film: {}", userId, filmId);
+            return getFilm(filmId).orElseThrow(() -> new NotFoundException("Фильм с id " + filmId + " не найден."));
         }
         throw new NotFoundException("Фильм с id " + filmId + " не найден.");
     }
@@ -87,7 +82,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         log.info("Get popular films");
         return likesById.keySet().stream()
                 .sorted(Comparator.comparingInt(o -> likesById.get(o).size()))
-                .map(this::getFilm)
+                .flatMap(o -> getFilm(o).stream())
                 .limit(limit)
                 .toList().reversed();
     }

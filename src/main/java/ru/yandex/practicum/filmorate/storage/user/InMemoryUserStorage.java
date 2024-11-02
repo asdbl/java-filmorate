@@ -18,7 +18,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User createUser(User user) {
-        userValidation(user);
         user.setId(++id);
         friendsByUserId.put(user.getId(), new HashSet<>());
         users.put(user.getId(), user);
@@ -30,7 +29,6 @@ public class InMemoryUserStorage implements UserStorage {
     public User updateUser(User user) {
         if (user.getId() != null) {
             if (users.containsKey(user.getId())) {
-                userValidation(user);
                 users.put(user.getId(), user);
                 log.info("User updated: {}", user);
                 return user;
@@ -47,35 +45,30 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User getUser(Long id) {
-        Optional<User> optionalUser = Optional.ofNullable(users.get(id));
-        return optionalUser.orElseThrow(() -> new NotFoundException("Введен неверный id пользователя"));
+    public Optional<User> getUser(Long id) {
+        return Optional.ofNullable(users.get(id));
     }
 
     @Override
     public List<User> addFriend(Long userId, Long friendId) {
-        User user = getUser(userId);
-        User friend = getUser(friendId);
         if (userId.equals(friendId)) {
             log.warn("User id is same as friendId when adding friend");
             throw new NotFoundException("id пользователья не может совпадать с id друга.");
         }
         friendsByUserId.get(userId).add(friendId);
-        log.trace("friend with id {} added to user with id {}", friendId, userId);
+        log.info("friend with id {} added to user with id {}", friendId, userId);
         friendsByUserId.get(friendId).add(userId);
         return getFriends(userId);
     }
 
     @Override
     public List<User> removeFriend(Long userId, Long friendId) {
-        User user = getUser(userId);
-        User friend = getUser(friendId);
         if (userId.equals(friendId)) {
             log.warn("User id is same as friendId when removing friend");
             throw new NotFoundException("id пользователья не может совпадать с id друга.");
         }
         friendsByUserId.get(userId).remove(friendId);
-        log.trace("friend with id {} removed from user with id {}", friendId, userId);
+        log.info("friend with id {} removed from user with id {}", friendId, userId);
         friendsByUserId.get(friendId).remove(userId);
         return getFriends(userId);
     }
@@ -87,25 +80,16 @@ public class InMemoryUserStorage implements UserStorage {
             throw new NotFoundException("Пользователь с таким id не найден.");
         }
         return friendsByUserId.get(userId).stream()
-                .map(this::getUser)
+                .flatMap(o -> getUser(o).stream())
                 .toList();
     }
 
     @Override
     public List<User> getCommonFriends(Long user1Id, Long user2Id) {
-        User user1 = getUser(user1Id);
-        User user2 = getUser(user2Id);
-        log.trace("Get common friends of user1 {} and user2 {}", user1Id, user2Id);
+        log.info("Get common friends of user1 {} and user2 {}", user1Id, user2Id);
         return friendsByUserId.get(user1Id).stream()
                 .filter(friendId -> friendsByUserId.get(user2Id).contains(friendId))
-                .map(this::getUser)
+                .flatMap(o -> getUser(o).stream())
                 .toList();
-    }
-
-    private static void userValidation(User user) {
-        if (user.getName() == null || user.getName().isBlank()) {
-            log.warn("User name is blank, use email instead");
-            user.setName(user.getLogin());
-        }
     }
 }
