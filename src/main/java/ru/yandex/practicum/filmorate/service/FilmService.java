@@ -52,7 +52,6 @@ public class FilmService {
     }
 
     public Film getFilm(long filmId) {
-        filmValidation(filmId);
         log.info("Getting film {}", filmId);
         return filmStorage.getFilm(filmId).orElseThrow(() -> new NotFoundException("Фильм с id " + filmId + " не найден."));
     }
