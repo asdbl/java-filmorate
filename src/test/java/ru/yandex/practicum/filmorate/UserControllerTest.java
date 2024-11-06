@@ -6,6 +6,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.model.User;
@@ -18,7 +19,8 @@ import static org.junit.Assert.assertFalse;
 
 @SpringBootTest
 public class UserControllerTest {
-    static UserController userController = new UserController();
+    @Autowired
+    private UserController userController;
     private Validator validator;
 
     @Before
