@@ -3,15 +3,18 @@ package ru.yandex.practicum.filmorate.model;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
 import ru.yandex.practicum.filmorate.validation.ReleaseDate;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Film.
  */
 @Data
+@Builder
 public class Film {
     private Long id;
     @NotBlank(message = "Имя не может быть пустым")
@@ -23,4 +26,7 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "Длительность фильм не может быть отрицательной")
     private int duration;
+    private List<Genre> genre;
+    private Mpa mpa;
+
 }
